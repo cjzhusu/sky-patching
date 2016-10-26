@@ -13,7 +13,34 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div>
+    <div class="load_board">
+        <header class="sp_login">
+            <div>登录</div>
+        </header>
+        <hr />
+        <section class="wel_sec">
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-user wel_con"></span>
+                <input type="email" placeholder="邮箱" id="wel_email" class="wel_input"/>
+            </div>
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-lock wel_con"></span>
+                <input type="password" placeholder="密码" id="wel_pwd" class="wel_input" />
+            </div>
+            <div class="wel_sec_box">
+                <span class="pwd_remember"><input type="checkbox" id="pwd_remember" />使我保持登录状态</span>
+                <a href="javascript:void(0)" id="forget_pwd" class="wel_a">忘记密码</a>
+            </div>
+            <div class="wel_sec_div">
+                <input type="button" value="登 录" id="wel_login" class="btn_a btn_login" />
+                <div class="wel_reg"><a href="javascript:void(0)" id="forget_pwd">立即注册</a></div>
+            </div>
+            <hr />
+        </section>
+        
+        <footer>
+            Designed by cjzhusu.
+        </footer>
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

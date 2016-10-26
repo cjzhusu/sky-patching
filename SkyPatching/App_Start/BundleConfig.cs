@@ -24,7 +24,8 @@ namespace SkyPatching
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/jquery-confirm.min.css"));
+                      "~/Content/jquery-confirm.min.css",
+                      "~/Content/sky-patching.css"));
         }
     }
 }
