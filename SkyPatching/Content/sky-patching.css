@@ -8,13 +8,23 @@
     background-color: white;
     border-radius: 2px;
     box-shadow: 0px 0px 20px 0px;
-    width:420px;
+    width:440px;
+    margin: 0px auto;
+    padding: 4px 2px 2px 4px;
+}
+
+.reg_board {
+    z-index:1000;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 0px 20px 0px;
+    width: 440px;
     margin: 0px auto;
     padding: 4px 2px 2px 4px;
 }
 
 .sp_login{
-    text-align: center;
+    /*text-align: center;*/
     font-size: 2em;
 }
 
@@ -34,8 +44,8 @@
 .wel_input {
   width: 100%;
   height: 40px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
   font-size: 14px;
   line-height: 1.428571429;
   color: #555555;
@@ -64,12 +74,12 @@
 
 .pwd_remember {
     float: left;
-    margin-left: 66px;
+    margin-left: 76px;
 }
 
 .wel_a {
     float: right;
-    margin-right: 66px;
+    margin-right: 76px;
 }
 
 .btn_a {
@@ -98,8 +108,8 @@
   border-color: #46b8da;
   height:42px;
   font-size: 1.4em;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .btn_login:hover,
@@ -114,7 +124,14 @@
     padding-top: 5px;
     padding-bottom: 10px;
     text-align: right;
-    margin-right: 66px;
+    margin-right: 76px;
+}
+
+.to_login {
+    padding-top: 5px;
+    padding-bottom: 10px;
+    text-align: right;
+    font-size: 0.6em;
 }
 
 footer{
@@ -124,4 +141,18 @@ footer{
     position: relative;
     text-align: right;
     font-family: 'Adobe Arabic'
+}
+
+.wel_con_remind {
+    color: white;
+    z-index: 5;
+    display: inline;
+}
+
+.wel_login{
+    margin-right: 20px;
+}
+
+.gl_standard_code {
+    margin-left: -106px;
 }

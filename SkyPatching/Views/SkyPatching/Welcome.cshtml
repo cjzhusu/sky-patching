@@ -21,7 +21,7 @@
         <section class="wel_sec">
             <div class="wel_sec_div">
                 <span class="glyphicon glyphicon-user wel_con"></span>
-                <input type="email" placeholder="邮箱" id="wel_email" class="wel_input"/>
+                <input type="email" placeholder="邮箱" id="wel_email" class="wel_input" />
             </div>
             <div class="wel_sec_div">
                 <span class="glyphicon glyphicon-lock wel_con"></span>
@@ -33,7 +33,7 @@
             </div>
             <div class="wel_sec_div">
                 <input type="button" value="登 录" id="wel_login" class="btn_a btn_login" />
-                <div class="wel_reg"><a href="javascript:void(0)" id="forget_pwd">立即注册</a></div>
+                <div class="wel_reg"><a href="javascript:void(0)" id="forward_register">立即注册</a></div>
             </div>
             <hr />
         </section>
@@ -42,7 +42,69 @@
             Designed by cjzhusu.
         </footer>
     </div>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        $("#wel_login").click(function () {
+            var emailAddr = $("#wel_email").val().trim();
+            var pwd = $("#wel_pwd");
+            if ("" === emailAddr) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "请填写邮箱地址!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if (!CheckMail(emailAddr)) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "邮箱地址不合法!",
+                    autoClose: 'cancel|6000',
+                });
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/SkyPatching/Login",
+                    data: { inputCode: code },
+                    async: true,
+                    success: function (result) {
+                        if (result.Code === "-1") {
+                            $.confirm({
+                                title: false,
+                                confirmButton: false,
+                                closeIcon: false,
+                                cancelButton: '我知道了',
+                                cancelButtonClass: 'btn-info',
+                                content: result.Message,
+                                autoClose: 'cancel|6000',
+                            });
+                        } else if (result.Code === "1") {
+                            $.confirm({
+                                title: false,
+                                confirmButton: false,
+                                closeIcon: false,
+                                cancelButton: 'Enjoy the trip',
+                                cancelButtonClass: 'btn-success',
+                                content: "Enjoy the trip",
+                                autoClose: 'cancel|10000',
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#forward_register").click(function () {
+            window.location.href = "@Url.Action("Register", "SkyPatching")";
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,257 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Register</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="reg_board">
+        <header class="sp_login">
+            <span>注册</span>
+            <span class="to_login"><a href="javascript:void(0)" id="to_login">已有账号，前往登录</a></span>
+        </header>
+        <hr />
+        <section class="wel_sec">
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-user wel_con"></span>
+                <input type="email" placeholder="邮箱" id="wel_email" class="wel_input" />
+                <span class="glyphicon glyphicon-ok wel_con_remind" id="email_reg"></span>
+            </div>
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-lock wel_con"></span>
+                <input type="password" placeholder="密码" id="wel_pwd" class="wel_input" />
+                <span class="glyphicon glyphicon-ok wel_con_remind" id="pwd_reg"></span>
+            </div>
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-lock wel_con"></span>
+                <input type="password" placeholder="再次输入密码" id="wel_pwd_again" class="wel_input" />
+                <span class="glyphicon glyphicon-ok wel_con_remind" id="pwd_reg_ag"></span>
+            </div>
+            <div class="wel_sec_div">
+                <span class="glyphicon glyphicon-pencil wel_con"></span>
+                <input type="text" placeholder="验证码" id="wel_validate" class="wel_input" />
+                <img class="gl_standard_code" id="gl_standard_code" style="cursor: pointer;border-radius: 4px;" src="@Url.Action("GetImg", "SkyPatching")?t=@DateTime.Now.Ticks" title="看不清，点击换一张" />
+                <span class="glyphicon glyphicon-ok wel_con_remind" id="code_reg"></span>
+            </div>
+            <div class="wel_sec_div">
+                <input type="button" value="注 册" id="wel_login" class="btn_a btn_login wel_login" />
+            </div>
+            <hr />
+        </section>
+
+        <footer>
+            Designed by cjzhusu.
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        //输入邮箱及时提示
+        $("#wel_email").keyup(function () {
+            var emailAddr = $("#wel_email").val();
+            if (emailAddr != null && emailAddr != "") {
+                emailAddr = emailAddr.trim();
+            }
+            if ("" === emailAddr || !CheckMail(emailAddr)) {
+                $("#email_reg").attr("style", "color:red");
+                $("#email_reg").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+            } else {
+                $("#email_reg").attr("style", "color:lightblue");
+                $("#email_reg").attr("class", "glyphicon glyphicon-ok wel_con_remind");
+            }
+        });
+        //输入密码及时提示
+        $("#wel_pwd").keyup(function () {
+            var pwd = $("#wel_pwd").val();
+            if (pwd != null && pwd != "") {
+                pwd = pwd.trim();
+            }
+            if ("" === pwd || !CheckPwd(pwd)) {
+                $("#pwd_reg").attr("style", "color:red");
+                $("#pwd_reg").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+                //$("#pwd_reg").text("密码必须包含数字和字母");
+            } else if (pwd.length < 8 || pwd.length > 16) {
+                $("#pwd_reg").attr("style", "color:red");
+                $("#pwd_reg").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+                //$("#pwd_reg").text("密码长度必须在8~16位之间");
+            } else {
+                $("#pwd_reg").attr("style", "color:lightblue");
+                $("#pwd_reg").attr("class", "glyphicon glyphicon-ok wel_con_remind");
+            }
+        });
+        //再次输入密码及时提示
+        $("#wel_pwd_again").keyup(function () {
+            var pwd = $("#wel_pwd").val();
+            if (pwd != null && pwd != "") {
+                pwd = pwd.trim();
+            }
+            var pwd_ag = $("#wel_pwd_again").val();
+            if (pwd_ag != null && pwd_ag != "") {
+                pwd_ag = pwd_ag.trim();
+            }
+            if (pwd === pwd_ag && (pwd_ag != "" || pwd != "")) {
+                $("#pwd_reg_ag").attr("style", "color:lightblue");
+                $("#pwd_reg_ag").attr("class", "glyphicon glyphicon-ok wel_con_remind");
+            } else {
+                $("#pwd_reg_ag").attr("style", "color:red");
+                $("#pwd_reg_ag").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+            }
+        });
+        //点击验证码，重新生成
+        $("#gl_standard_code").click(function () {
+            var newSrc = "@Url.Action("GetImg", "SkyPatching")" + "?t=" + (new Date()).getTime();
+            this.src = newSrc;
+
+            $("#code_reg").attr("style", "color:red");
+            $("#code_reg").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+            return false;
+        });
+        //输入验证码及时提示
+        $("#wel_validate").keyup(function () {
+            var code = $("#wel_validate").val();
+            if (code != null && code != "") {
+                code = code.trim();
+            }
+            $.ajax({
+                type: "post",
+                url: "/SkyPatching/ValidateCode",
+                data: { inputCode: code },
+                async: true,
+                success: function (result) {
+                    if (result.Code === "1") {
+                        $("#code_reg").attr("style", "color:lightblue");
+                        $("#code_reg").attr("class", "glyphicon glyphicon-ok wel_con_remind");
+                    } else if (result.Code === "-1") {
+                        $("#code_reg").attr("style", "color:red");
+                        $("#code_reg").attr("class", "glyphicon glyphicon-remove wel_con_remind");
+                    }
+                }
+            });
+        });
+        //点击注册
+        $("#wel_login").click(function () {
+            var emailAddr = $("#wel_email").val();
+            if (emailAddr != null && emailAddr != "") {
+                emailAddr = emailAddr.trim();
+            }
+            var pwd = $("#wel_pwd").val();
+            if (pwd != null && pwd != "") {
+                pwd = pwd.trim();
+            }
+            var pwd_ag = $("#wel_pwd_again").val();
+            if (pwd_ag != null && pwd_ag != "") {
+                pwd_ag = pwd_ag.trim();
+            }
+            var code = $("#wel_validate").val();
+            if (code != null && code != "") {
+                code = code.trim();
+            }
+            if ("" === emailAddr) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "请填写邮箱地址!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if (!CheckMail(emailAddr)) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "邮箱地址不合法!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if (!CheckPwd(pwd)) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "密码必须字母和数字!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if (pwd > 16 || pwd < 8) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "密码长度必须在6~18位之间!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if (pwd != pwd_ag) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "两次输入密码不一致!",
+                    autoClose: 'cancel|6000',
+                });
+            } else if ("" === code) {
+                $.confirm({
+                    title: false,
+                    confirmButton: false,
+                    closeIcon: false,
+                    cancelButton: '我知道了',
+                    cancelButtonClass: 'btn-info',
+                    content: "请输入验证码!",
+                    autoClose: 'cancel|6000',
+                });
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/SkyPatching/ValidateCode",
+                    data: { inputCode: code },
+                    async: true,
+                    success: function (result) {
+                        if (result.Code === "-1") {
+                            $.confirm({
+                                title: false,
+                                confirmButton: false,
+                                closeIcon: false,
+                                cancelButton: '我知道了',
+                                cancelButtonClass: 'btn-info',
+                                content: result.Message,
+                                autoClose: 'cancel|6000',
+                            });
+                            $("#gl_standard_code").click();
+
+                        } else if (result.Code === "1") {
+                            $.confirm({
+                                title: false,
+                                confirmButton: false,
+                                closeIcon: false,
+                                cancelButton: 'Enjoy the trip',
+                                cancelButtonClass: 'btn-success',
+                                content: "Enjoy the trip",
+                                autoClose: 'cancel|10000',
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#to_login").click(function () {
+            window.location.href = "@Url.Action("Welcome", "SkyPatching")";
+        });
+    </script>
+</body>
+</html>
